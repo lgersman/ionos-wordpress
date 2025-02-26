@@ -135,5 +135,5 @@ jobs:
             "${{secrets.GOOGLECHAT_PIPELINE_ANNOUNCEMENTS_WEBHOOK}}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD&thread_key=${{ steps.google_chat_thread_id.outputs.GOOGLE_CHAT_THREAD_ID }}"
 
       # variablen im curl json body müssen noch encoded werden (" -> \")
-      # requested review und draft fehlt noch
+      # pr merge vs closed fehlt noch
 
