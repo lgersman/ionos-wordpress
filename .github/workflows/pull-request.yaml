@@ -115,7 +115,7 @@ jobs:
           ${{ github.event.pull_request.body || '' }})
           EOF
           )
-          curl -X POST \
+          echo curl -X POST \
             -H 'Content-Type: application/json' \
             -d "{\"text\": $MESSAGE }" \
             "${{ steps.gchat_url.outputs.GCHAT_URL }}"
