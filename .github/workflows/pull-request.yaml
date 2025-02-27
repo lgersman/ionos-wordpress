@@ -110,9 +110,9 @@ jobs:
         if: ${{github.event_name == 'pull_request_target'}}
         run: |
           TEXT=$(cat <<'X!X' | jq -Rsr @json
-          ${{github.triggering_actor}} ${{github.event.action}} pull request *'${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}'*
+          ${{github.triggering_actor}} ${{github.event.action}} pull request *${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}*
 
-          ${{(github.event.action=='openend' || github.event.action=='openend' && github.event.pull_request.body) || ''}}
+          ${{(github.event.action=='opened' || github.event.action=='edited' && github.event.pull_request.body) || ''}}
 
           ${{github.event.pull_request._links.html.href}}
           X!X
