@@ -107,14 +107,12 @@ jobs:
           echo "GCHAT_URL=${{secrets.GOOGLECHAT_PIPELINE_ANNOUNCEMENTS_WEBHOOK}}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD&thread_key=$THREAD_KEY" \
             >> $GITHUB_OUTPUT
       - name: Send pull request created message
-        if: ${{ github.event_name == 'pull_request_target' }}
+        if: ${{github.event_name == 'pull_request_target'}}
         run: |
           TEXT=$(cat <<'X!X' | jq -Rsr @json
-          ${{github.triggering_actor}} ${{github.event.action}} pull request
+          ${{github.triggering_actor}} ${{github.event.action}} pull request *'${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}'*
 
-          ${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}
-
-          ${{github.event.pull_request.body || ''}}
+          ${{(github.event.action=='openend' || github.event.action=='openend' && github.event.pull_request.body) || ''}}
 
           ${{github.event.pull_request._links.html.href}}
           X!X
@@ -122,7 +120,7 @@ jobs:
           curl -X POST \
             -H 'Content-Type: application/json' \
             -d "{\"text\": $TEXT }" \
-            "${{ steps.gchat_url.outputs.GCHAT_URL }}"
+            '${{ steps.gchat_url.outputs.GCHAT_URL }}'
 
       - name: send pull request review message
         if: ${{ github.event_name == 'pull_request_review' }}
