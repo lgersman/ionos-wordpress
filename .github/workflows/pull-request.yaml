@@ -112,7 +112,7 @@ jobs:
           TEXT=$(cat -s <<'X!X' | jq -Rsr @json
           ${{github.triggering_actor}} ${{github.event.action}} pull request *'${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}'*
 
-          ${{(github.event.action=='opened' || github.event.action=='edited' && github.event.pull_request.body) || ''}}
+          ${{(github.event.action=='opened' || github.event.action=='edited') && github.event.pull_request.body || ''}}
 
           ${{github.event.pull_request._links.html.href}}
           X!X
