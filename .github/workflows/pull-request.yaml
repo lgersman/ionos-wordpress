@@ -104,7 +104,7 @@ jobs:
       - id: gchat_url
         run: |
           THREAD_KEY=$(echo '${{ github.event.pull_request.number || github.event.issue.number }}' | jq -sRr @uri)
-          echo "GCHAT_URL=${{secrets.GOOGLECHAT_PIPELINE_ANNOUNCEMENTS_WEBHOOK}}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD&thread_key=${{ THREAD_KEY }}" \
+          echo "GCHAT_URL=${{secrets.GOOGLECHAT_PIPELINE_ANNOUNCEMENTS_WEBHOOK}}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD&thread_key=$THREAD_KEY" \
             >> $GITHUB_OUTPUT
       - name: Send pull request created message
         if: ${{ github.event_name == 'pull_request_target' }}
