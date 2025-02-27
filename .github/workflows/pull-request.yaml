@@ -106,7 +106,7 @@ jobs:
           THREAD_KEY=$(echo '${{ github.event.pull_request.number || github.event.issue.number }}' | jq -sRr @uri)
           echo "GCHAT_URL=${{secrets.GOOGLECHAT_PIPELINE_ANNOUNCEMENTS_WEBHOOK}}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD&thread_key=$THREAD_KEY" \
             >> $GITHUB_OUTPUT
-      - name: Send pull request created message
+      - name: send pull request related messages
         if: ${{github.event_name == 'pull_request_target'}}
         run: |
           TEXT=$(cat -s <<'X!X' | jq -Rsr @json
@@ -122,6 +122,7 @@ jobs:
             -d "{\"text\": $TEXT }" \
             '${{ steps.gchat_url.outputs.GCHAT_URL }}'
 
+        # ab hier weiter
       - name: send pull request review message
         if: ${{ github.event_name == 'pull_request_review' }}
         run: |
@@ -146,6 +147,4 @@ jobs:
             -d "{\"text\": \"${{ github.event_name }} ${{ github.triggering_actor }} ${{ github.event.action }} : \n\n${{ github.event.comment.body || '' }}\n\n${{ github.event.comment.html_url }} \" }" \
             "${{secrets.GOOGLECHAT_PIPELINE_ANNOUNCEMENTS_WEBHOOK}}&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD&thread_key=${{ steps.google_chat_thread_id.outputs.GOOGLE_CHAT_THREAD_ID }}"
 
-      # variablen im curl json body müssen noch encoded werden (" -> \")
-      # pr merge vs closed fehlt noch
 
