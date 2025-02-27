@@ -111,17 +111,17 @@ jobs:
         run: |
           set -x
           # html sanitize title
-          TITLE=$(cat <<'X!X' | jq -Rsr @html
+          TITLE=$(cat <<'X!X' | jq -Rsr @json
           ${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}
           X!X
           )
           # html sanitize body
-          BODY=$(cat <<'X!X' | jq -Rsr @html
+          BODY=$(cat <<'X!X' | jq -Rsr @json
           ${{github.event.pull_request.body || ''}}
           X!X
           )
           # create gchat text
-          TEXT=$(cat << X!X | jq -Rsr @json
+          TEXT=$(cat << X!X
           ${{github.triggering_actor}} ${{github.event.action}} pull request <${{github.event.pull_request._links.html.href}}|$TITLE>:
 
           $BODY
@@ -129,7 +129,7 @@ jobs:
           )
           curl -X POST \
             -H 'Content-Type: application/json' \
-            -d "{\"text\": $TEXT }" \
+            -d "{\"text\": \"$TEXT\" }" \
             "${{ steps.gchat_url.outputs.GCHAT_URL }}"
 
       - name: send pull request review message
