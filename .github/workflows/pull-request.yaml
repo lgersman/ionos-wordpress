@@ -114,7 +114,7 @@ jobs:
           $TEXT=$(cat <<EOF | jq -Rsr @json
           ${{github.triggering_actor}} ${{github.event.action}} pull request <${{github.event.pull_request._links.html.href}}|$TITLE>:
 
-          ${{github.event.pull_request.body || ''}})
+          $(echo "${{github.event.pull_request.body || ''}})" | jq -Rsr @html)
           EOF
           )
           curl -X POST \
