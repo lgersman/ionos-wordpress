@@ -110,7 +110,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request_target' }}
         run: |
           set -x
-          $TITLE="$(echo '${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}' | jq -Rsr @html)"
+          $TITLE="$(echo '${{github.event.pull_request.title}} ${{github.event.pull_request.draft && \'(draft)\' || \'\'}}' | jq -Rsr @html)"
           $TEXT=$(cat <<EOF | jq -Rsr @json
           ${{github.triggering_actor}} ${{github.event.action}} pull request <${{github.event.pull_request._links.html.href}}|$TITLE>:
 
