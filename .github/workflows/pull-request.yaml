@@ -109,27 +109,19 @@ jobs:
       - name: Send pull request created message
         if: ${{ github.event_name == 'pull_request_target' }}
         run: |
-          set -x
-          # html sanitize title
-          TITLE=$(cat <<'X!X' | jq -Rsr @json
-          ${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}} &lt;Ha!&gt;
-          X!X
-          )
-          # html sanitize body
-          BODY=$(cat <<'X!X' | jq -Rsr @json
-          ${{github.event.pull_request.body || ''}}
-          X!X
-          )
-          # create gchat text
-          TEXT=$(cat << X!X
-          ${{github.triggering_actor}} ${{github.event.action}} pull request <${{github.event.pull_request._links.html.href}}|$TITLE>:
+          TEXT=$(cat <<'X!X' | jq -Rsr @json
+          ${{github.triggering_actor}} ${{github.event.action}} pull request
 
-          $BODY
+          ${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}
+
+          ${{github.event.pull_request.body || ''}}
+
+          ${{github.event.pull_request._links.html.href}}
           X!X
           )
           curl -X POST \
             -H 'Content-Type: application/json' \
-            -d "{\"text\": \"$TEXT\" }" \
+            -d "{\"text\": $TEXT }" \
             "${{ steps.gchat_url.outputs.GCHAT_URL }}"
 
       - name: send pull request review message
