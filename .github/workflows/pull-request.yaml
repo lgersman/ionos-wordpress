@@ -109,8 +109,8 @@ jobs:
       - name: Send pull request created message
         if: ${{github.event_name == 'pull_request_target'}}
         run: |
-          TEXT=$(cat <<'X!X' | jq -Rsr @json
-          ${{github.triggering_actor}} ${{github.event.action}} pull request *${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}*
+          TEXT=$(cat -s <<'X!X' | jq -Rsr @json
+          ${{github.triggering_actor}} ${{github.event.action}} pull request *'${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}'*
 
           ${{(github.event.action=='opened' || github.event.action=='edited' && github.event.pull_request.body) || ''}}
 
