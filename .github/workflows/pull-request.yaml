@@ -110,12 +110,22 @@ jobs:
         if: ${{ github.event_name == 'pull_request_target' }}
         run: |
           set -x
-          $TITLE="$(echo \"${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}\" | jq -Rsr @html)"
+          # html sanitize title
+          TITLE=$(cat <<'X!X' | jq -Rsr @html
+          ${{github.event.pull_request.title}} ${{github.event.pull_request.draft && '(draft)' || ''}}
+          X!X
+          )
+          # html sanitize body
+          BODY=$(cat <<'X!X' | jq -Rsr @html
+          ${{github.event.pull_request.body || ''}}
+          X!X
+          )
+          # create gchat text
           $TEXT=$(cat <<EOF | jq -Rsr @json
           ${{github.triggering_actor}} ${{github.event.action}} pull request <${{github.event.pull_request._links.html.href}}|$TITLE>:
 
-          $(echo "${{github.event.pull_request.body || ''}})" | jq -Rsr @html)
-          EOF
+          $BODY
+          X!X
           )
           curl -X POST \
             -H 'Content-Type: application/json' \
