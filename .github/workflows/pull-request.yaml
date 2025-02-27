@@ -121,7 +121,7 @@ jobs:
           X!X
           )
           # create gchat text
-          $TEXT=$(cat <<EOF | jq -Rsr @json
+          $TEXT=$(cat <<X!X | jq -Rsr @json
           ${{github.triggering_actor}} ${{github.event.action}} pull request <${{github.event.pull_request._links.html.href}}|$TITLE>:
 
           $BODY
