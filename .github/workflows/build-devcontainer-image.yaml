@@ -51,6 +51,7 @@ jobs:
           #   refs/heads/main
           #   refs/heads/develop
           # eventFilterForPush: push
+          push: never
           imageName: ${{ steps.image_name.outputs.image_name }}
           runCmd: |
             php --version
