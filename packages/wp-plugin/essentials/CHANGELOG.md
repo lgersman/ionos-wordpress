@@ -1,5 +1,11 @@
 # @ionos-wordpress/essentials
 
+## 0.1.1
+
+### Patch Changes
+
+- 0f7d878: sdfsdfsdfsd
+
 ## 0.1.0
 
 ### Minor Changes
