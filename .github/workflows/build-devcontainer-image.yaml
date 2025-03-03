@@ -50,7 +50,7 @@ jobs:
           refFilterForPush: |
             refs/heads/main
             refs/heads/develop
-          eventFilterForPush: push
+          # eventFilterForPush: push
           imageName: ${{ steps.image_name.outputs.image_name }}
           runCmd: |
             php --version
