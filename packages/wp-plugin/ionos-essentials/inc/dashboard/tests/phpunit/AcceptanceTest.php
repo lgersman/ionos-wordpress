@@ -17,7 +17,7 @@ class AcceptanceTest extends \WP_UnitTestCase {
 
     parent::setUp();
 
-    \activate_plugin('essentials/essentials.php');
+    \activate_plugin('ionos-essentials/ionos-essentials.php');
   }
 
   function test_dashboard_blocks_registered() : void {

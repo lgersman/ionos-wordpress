@@ -4,7 +4,7 @@ import { writeFileSync, unlinkSync, existsSync, renameSync } from 'node:fs';
 
 test.describe('Dashboard Global Styles', () => {
   const THEME = 'twentytwentyfive';
-  const GLOBAL_STYLES_FILE = `packages/wp-plugin/essentials/inc/dashboard/data/${THEME}-global-styles.json`;
+  const GLOBAL_STYLES_FILE = `packages/wp-plugin/ionos-essentials/inc/dashboard/data/${THEME}-global-styles.json`;
 
   test.beforeEach(async () => {
     // backup the global styles file
