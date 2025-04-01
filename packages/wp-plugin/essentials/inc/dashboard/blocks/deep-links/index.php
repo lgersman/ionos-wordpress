@@ -89,6 +89,9 @@ function render_callback()
 
 \add_filter('ionos_dashboard_banner__register_button', function ($button_list) {
   $data = get_deep_links_data();
+  if (!isset($data['domain'])) {
+    return $button_list;
+  }
 
   $button_list[] = [
     'link'           => $data['domain'],
