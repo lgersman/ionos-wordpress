@@ -1,5 +1,12 @@
 # @ionos-wordpress/essentials
 
+## 0.1.7
+
+### Patch Changes
+
+- 95f0284: test-release-15
+- f4cb55d: test-release-14
+
 ## 0.1.6
 
 ### Patch Changes
