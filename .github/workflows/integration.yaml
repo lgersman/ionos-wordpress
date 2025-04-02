@@ -31,10 +31,12 @@ permissions:
 
 jobs:
   devcontainer:
+    if: github.event.workflow_run || github.event.branch == 'main'
     uses: ./.github/workflows/build-devcontainer-image.yaml
     secrets: inherit
 
   test:
+    if: github.event.workflow_run || github.event.branch == 'main'
     runs-on: ubuntu-latest
     needs:
       - devcontainer
