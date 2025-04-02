@@ -14,9 +14,9 @@ on:
 
   # run on all branches
   push:
-    branches:
-      # run for all branches except main (integration for main is explicitly defined in the pre-release workflow)
-      - '!main'
+    # run for all branches except main (integration for main is explicitly defined in the pre-release workflow)
+    branches-ignore:
+      - 'main'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
