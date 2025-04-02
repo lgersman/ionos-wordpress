@@ -9,10 +9,10 @@
 # - update the versions of all packages
 # - build the project
 # - @TODO test the project
-# - create a releases for all packages that have changed and add its artifacts to the release
+# - create a release for all packages that have changed and add its artifacts to the release
 # - gather the workflow artifacts
 #
-name: 'release'
+name: 'pre-release'
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
     uses: ./.github/workflows/build-devcontainer-image.yaml
     secrets: inherit
 
-  release:
+  pre-release:
     runs-on: ubuntu-latest
     needs:
       - devcontainer
