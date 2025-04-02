@@ -36,7 +36,7 @@ source "$(realpath $0 | xargs dirname)/includes/bootstrap.sh"
 
 # abort if we are not on the "main" branch
 if [[ "$(git rev-parse --abbrev-ref HEAD)" != 'main' ]]; then
-  ionos.wordpress.log_error "You can only release from the main branch"
+  ionos.wordpress.log_error "You can only release from the branch 'main'. Current branch is '$(git rev-parse --abbrev-ref HEAD)'."
   exit 1
 fi
 
