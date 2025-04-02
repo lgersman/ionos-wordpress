@@ -65,7 +65,7 @@ jobs:
             export GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
             export GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK="${{ secrets.GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK }}"
 
-            pnpm pre-release
+            BUILD_UP_TO_DATE=1 pnpm pre-release
 
       - uses: './.github/shared/actions/devcontainer-shell-run'
         id: gather_workflow_artifacts
