@@ -14,7 +14,7 @@ on:
 
   # run on all branches
   push:
-    # run for all branches except main (integration for main is explicitly defined in the pre-release workflow)
+    # run for all branches except main (because testing is also done in pre-release workflow)
     branches-ignore:
       - 'main'
 
@@ -58,14 +58,7 @@ jobs:
         with:
           runCmd: |
             pnpm install --frozen-lockfile
-            pnpm build
-
-      # commented out for testing purposes
-      # - uses: './.github/shared/actions/devcontainer-shell-run'
-      #   name: test_project
-      #   with:
-      #     runCmd: |
-      #       BUILD_UP_TO_DATE=1 pnpm test
+            pnpm test
 
       - uses: './.github/shared/actions/devcontainer-shell-run'
         id: gather_workflow_artifacts
