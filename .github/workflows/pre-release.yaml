@@ -60,9 +60,6 @@ jobs:
         name: build_project
         with:
           runCmd: |
-            pnpm install --frozen-lockfile
-            pnpm test
-
             export GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
             export GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK="${{ secrets.GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK }}"
 

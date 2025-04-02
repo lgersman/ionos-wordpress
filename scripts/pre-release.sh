@@ -76,8 +76,8 @@ pnpm changeset version
 # update pnpm-lock.yaml
 pnpm install
 
-# build repository
-pnpm build
+# build & test repository
+pnpm test
 
 # generate sbom file
 docker run -it --rm -v $(pwd):/project anchore/syft \
