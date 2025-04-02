@@ -16,10 +16,6 @@ name: 'pre-release'
 
 # execute this workflow only on the main branch and wait until the integration workflow is completed
 on:
-  workflow_run:
-    workflows: ["integration"]
-    types:
-      - completed
   push:
     branches:
       - main
@@ -41,6 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - devcontainer
+      - integregration
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     if: "!contains(github.event.head_commit.message, 'skip release')"

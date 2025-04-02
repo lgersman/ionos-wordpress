@@ -9,6 +9,9 @@
 name: 'integration'
 
 on:
+  # can be called from other workflows
+  workflow_call:
+
   # run on all branches
   push:
     branches:
