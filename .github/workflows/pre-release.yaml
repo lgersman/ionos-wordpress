@@ -1,5 +1,6 @@
 #
-# this is the release workflow that is triggered by a push to the main branch
+# this is the prerelease workflow that is triggered by a push to the main branch
+# it will create a new github release including tags and marks that release as pre-release
 #
 # this workflow requires a secret "GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK" to point to the google chat room
 # if not declared his workflow will set a warning and will exit gracefully (=> without an error)
@@ -58,7 +59,7 @@ jobs:
             export GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
             export GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK="${{ secrets.GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK }}"
 
-            pnpm release
+            pnpm pre-release
 
       - uses: './.github/shared/actions/devcontainer-shell-run'
         id: gather_workflow_artifacts

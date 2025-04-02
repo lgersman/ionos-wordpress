@@ -3,7 +3,7 @@
 #
 # script is not intended to be executed directly. use `pnpm exec ...` instead or call it as package script.
 #
-# this script is used to create a github release.
+# this script is used to create a github release marked as pre-release.
 # only packages not marked as private will be released
 #
 # workflow:
@@ -173,7 +173,7 @@ for PACKAGE_JSON in $(git --no-pager diff --name-only HEAD HEAD~1 | grep 'packag
     ionos.wordpress.log_warn "no artifacts found for package $PACKAGE_NAME"
     continue
   fi
-  pnpm gh release create "$PACKAGE_NAME@$PACKAGE_VERSION" "${ARTIFACTS[@]}" --title "$RELEASE_TITLE" --notes-file "$PACKAGE_RELEASENOTES_FILE"
+  pnpm gh release create "$PACKAGE_NAME@$PACKAGE_VERSION" "${ARTIFACTS[@]}" --prerelease --title "$RELEASE_TITLE" --notes-file "$PACKAGE_RELEASENOTES_FILE"
 done
 
 # merge changes back to develop branch
@@ -195,7 +195,7 @@ if [[ "${GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK}" != '' ]]; then
   CHANGED_PACKAGES=$(echo "$CHANGESET_STATUS_JSON" | jq -r '.releases[] | "* \(.name)(\(.oldVersion)->\(.newVersion))"')
   curl -X POST \
     -H 'Content-Type: application/json' \
-    -d "{\"text\": \"*${TRIGGERING_ACTOR}* released repository *${REPOSITORY_NAME}*.\nThe following packages would be released:\n\n${CHANGED_PACKAGES} \n\nSee ${REPOSITORY_URL}\"}" \
+    -d "{\"text\": \"*${TRIGGERING_ACTOR}* pre-released repository *${REPOSITORY_NAME}*.\nThe following packages would be pre-released:\n\n${CHANGED_PACKAGES} \n\nSee ${REPOSITORY_URL}\"}" \
     "${GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK}"
 else
   if [[ "${CI:-}" == "true" ]]; then

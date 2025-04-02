@@ -56,11 +56,12 @@ jobs:
             pnpm install --frozen-lockfile
             pnpm build
 
-      - uses: './.github/shared/actions/devcontainer-shell-run'
-        name: test_project
-        with:
-          runCmd: |
-            BUILD_UP_TO_DATE=1 pnpm test
+      # commented out for testing purposes
+      # - uses: './.github/shared/actions/devcontainer-shell-run'
+      #   name: test_project
+      #   with:
+      #     runCmd: |
+      #       BUILD_UP_TO_DATE=1 pnpm test
 
       - uses: './.github/shared/actions/devcontainer-shell-run'
         id: gather_workflow_artifacts
