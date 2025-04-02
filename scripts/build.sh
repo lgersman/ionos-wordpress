@@ -156,6 +156,14 @@ function ionos.wordpress.build_workspace_package_docker() {
     return
   fi
 
+  # CI performance optimisation : get cached docker image from ghcr.io if it exists
+  if [[ -n "$CI" ]]; then
+    if docker manifest inspect ghcr.io/$DOCKER_IMAGE_NAME:$PACKAGE_VERSION &>/dev/null; then
+      docker pull ghcr.io/$DOCKER_IMAGE_NAME:$PACKAGE_VERSION
+      return
+    fi
+  fi
+
   rm -rf $path/{dist,build,build-info}
 
   pnpm --filter "$PACKAGE_NAME" --if-present run prebuild
