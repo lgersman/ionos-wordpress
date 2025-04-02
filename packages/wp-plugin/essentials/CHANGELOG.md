@@ -1,5 +1,11 @@
 # @ionos-wordpress/essentials
 
+## 0.1.1
+
+### Patch Changes
+
+- 0b30bc1: test-release-1
+
 ## 0.1.0
 
 ### Minor Changes
