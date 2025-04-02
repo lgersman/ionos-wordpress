@@ -33,6 +33,10 @@ jobs:
     uses: ./.github/workflows/build-devcontainer-image.yaml
     secrets: inherit
 
+  integration:
+    uses: ./.github/workflows/integration.yaml
+    secrets: inherit
+
   pre-release:
     runs-on: ubuntu-latest
     needs:
