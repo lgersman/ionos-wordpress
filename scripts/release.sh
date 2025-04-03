@@ -88,7 +88,7 @@ for ASSET in $ASSETS; do
 done
 
 readonly success_message="Successfully updated release '$LATEST_RELEASE_TAG' to point to release ${LATEST_RELEASE}(commit $PRE_RELEASE_COMMIT_HASH)"
-[[ "${CI:-}" == "true" ]] && echo "::summary:: $success_message"
+[[ "${CI:-}" == "true" ]] && echo "### $success_message" >> $GITHUB_STEP_SUMMARY
 echo "$success_message"
 
 # notify release to google chat room

@@ -34,5 +34,7 @@ jobs:
           export GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
           export GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK="${{ secrets.GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK }}"
 
+          # by calling this script directly in the pipeline we dont need to install pnpm :-)
+          # pnpm release
           ./scripts/release.sh
 
