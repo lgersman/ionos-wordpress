@@ -82,7 +82,7 @@ for ASSET in $ASSETS; do
   if ! gh release upload $LATEST_RELEASE $TARGET_ASSET_FILENAME --clobber; then
     $error_message="Failed to upload asset $TARGET_ASSET_FILENAME"
     [[ "${CI:-}" == "true" ]] && echo "::error:: $error_message"
-    echo "$error_message"
+    echo "Error: $error_message"
   fi
   rm -f $TARGET_ASSET_FILENAME
 done
