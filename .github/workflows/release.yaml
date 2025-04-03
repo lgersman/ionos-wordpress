@@ -8,6 +8,8 @@ name: 'release'
 on:
   # this workflow needs to be triggered manually
   workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   update-latest:
