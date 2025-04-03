@@ -1,5 +1,11 @@
 # @ionos-wordpress/essentials
 
+## 0.1.9
+
+### Patch Changes
+
+- 640480b: test-release-18
+
 ## 0.1.8
 
 ### Patch Changes
