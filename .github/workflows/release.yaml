@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-latest:
+  release:
     runs-on: ubuntu-latest
     # ensure only one pipeline is running this workflow at a time
     concurrency:
