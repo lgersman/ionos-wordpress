@@ -41,8 +41,8 @@ fi
 
 # get pre-release flagged release
 PRE_RELEASE=$(gh release list --json name,isPrerelease | jq -r '.[] | select(.isPrerelease == true) | .name')
-if [[ $(echo "$PRE_RELEASE" | wc -l) -ne 1 ]]; then
-  error_message="skip releasing - expected exactly one release flagged as 'pre-release' but found $(echo "$PRE_RELEASE" | wc -l)"
+if [[ -z "$PRE_RELEASE" || $(echo "$PRE_RELEASE" | wc -l) -ne 1 ]]; then
+  error_message="skip releasing - expected exactly one release flagged as 'pre-release' but found $([[ -z "$PRE_RELEASE" ]] && echo '0' || echo "$PRE_RELEASE" | wc -l)"
   [[ "${CI:-}" == "true" ]] && echo "::error:: $error_message"
   ionos.wordpress.log_error "$error_message\n$PRE_RELEASE"
   exit 1
@@ -60,10 +60,10 @@ if [[ "$LATEST_RELEASE" != "$LATEST_RELEASE_TAG" ]]; then
   git tag -d "$LATEST_RELEASE_TAG" 2>/dev/null ||:
   git push origin --delete "$LATEST_RELEASE_TAG" 2>/dev/null ||:
 
-  # create release
-  gh release create "$LATEST_RELEASE_TAG" --notes '' --title="$LATEST_RELEASE_TAG"
-  # 2>/dev/null
-  echo "created release '$LATEST_RELEASE_TAG'"
+  # # create release
+  # gh release create "$LATEST_RELEASE_TAG" --notes '' --title="$LATEST_RELEASE_TAG"
+  # # 2>/dev/null
+  # echo "created release '$LATEST_RELEASE_TAG'"
 fi
 
 # Get the commit hash of the tag associated with the pre-release
@@ -88,7 +88,7 @@ for ASSET in $ASSETS; do
   rm -f $TARGET_ASSET_FILENAME
   echo "upload release '$PRE_RELEASE' asset '$ASSET' as '$TARGET_ASSET_FILENAME' to release '$LATEST_RELEASE_TAG'"
   gh release download $PRE_RELEASE --pattern $ASSET -O $TARGET_ASSET_FILENAME
-  if ! gh release upload $LATEST_RELEASE $TARGET_ASSET_FILENAME --clobber; then
+  if ! gh release upload $LATEST_RELEASE_TAG $TARGET_ASSET_FILENAME --clobber; then
     $error_message="Failed to upload asset $TARGET_ASSET_FILENAME"
     [[ "${CI:-}" == "true" ]] && echo "::error:: $error_message"
     echo "Error: $error_message"
@@ -96,8 +96,9 @@ for ASSET in $ASSETS; do
   rm -f $TARGET_ASSET_FILENAME
 done
 
-readonly success_message="Successfully updated release '$LATEST_RELEASE_TAG' to point to release ${LATEST_RELEASE}(commit $PRE_RELEASE_COMMIT_HASH)"
-[[ "${CI:-}" == "true" ]] && echo "### $success_message" >> $GITHUB_STEP_SUMMARY
+readonly success_message="Successfully updated release '$LATEST_RELEASE_TAG' to point to release ${LATEST_RELEASE_TAG}(commit $PRE_RELEASE_COMMIT_HASH)"
+# @TODO: success message can be markdown containing links
+[[ "${CI:-}" == "true" ]] && echo "$success_message" >> $GITHUB_STEP_SUMMARY
 echo "$success_message"
 
 # notify release to google chat room
