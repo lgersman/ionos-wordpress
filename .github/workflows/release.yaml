@@ -18,15 +18,16 @@ jobs:
     steps:
       # only run on main branch
       - name: Check branch
-        if: github.event.branch != 'main'
+        if: github.event.inputs.branch != 'main'
         run: |
-          echo "::error::Workflow can only be run on main branch"
+          echo "::error::Workflow can only be run on branch 'main'"
           exit 1
 
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          branch: main
 
       - name: release
         run: |

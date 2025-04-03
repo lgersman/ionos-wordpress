@@ -91,4 +91,26 @@ readonly success_message="Successfully updated release '$LATEST_RELEASE_TAG' to 
 [[ "${CI:-}" == "true" ]] && echo "::summary:: $success_message"
 echo "$success_message"
 
+# notify release to google chat room
+if [[ "${GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK}" != '' ]]; then
+  # use the triggering actor of the github event if available, otherwise use the git config user.name
+  TRIGGERING_ACTOR="${GITHUB_TRIGGERING_ACTOR:-$(git config user.name)}"
+  # use the repository name from the github event if available, otherwise use the repository name from the git config
+  REPOSITORY_NAME=$( [[ $GITHUB_EVENT_PATH != '' ]] && jq -r '.repository.name' $GITHUB_EVENT_PATH || basename $(realpath .))
+  # use the repository url from the github event if available, otherwise use the repository url from the git config
+  REPOSITORY_URL=$( [[ $GITHUB_EVENT_PATH != '' ]] && echo "$(jq -r '.repository.html_url' $GITHUB_EVENT_PATH)/releases" || git remote get-url --push origin)
+  # changed packages computed by changeset
+  CHANGED_PACKAGES=$(echo "$CHANGESET_STATUS_JSON" | jq -r '.releases[] | "* \(.name)(\(.oldVersion)->\(.newVersion))"')
+  curl -X POST \
+    -H 'Content-Type: application/json' \
+    -d "{\"text\": \"*${TRIGGERING_ACTOR}* created a new release from repository *${REPOSITORY_NAME}*.\n$success_message\n\nSee ${REPOSITORY_URL}\"}" \
+    "${GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK}"
+else
+  if [[ "${CI:-}" == "true" ]]; then
+    echo "::warning::skip sending google chat release announcement message : secret GCHAT_RELEASE_ANNOUNCEMENTS_WEBHOOK is not defined"
+  else
+    ionos.wordpress.log_warn "CI environment detected - skip setting up git hooks"
+  fi
+fi
+
 
