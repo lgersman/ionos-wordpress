@@ -54,7 +54,7 @@ if [[ "$LATEST_RELEASE" != "$LATEST_RELEASE_TAG" ]]; then
   git push origin --delete "$LATEST_RELEASE_TAG" 2>/dev/null ||:
 
   # create release
-  gh release create "$LATEST_RELEASE_TAG" --notes '' --title="$LATEST_RELEASE_TAG" --latest=true
+  gh release create "$LATEST_RELEASE_TAG" --notes '' --title="$LATEST_RELEASE_TAG" --draft=false --prerelease=false --latest=true
   # 2>/dev/null
   echo "created release '$LATEST_RELEASE_TAG'"
 fi
