@@ -32,6 +32,13 @@ export GH_TOKEN=${GH_TOKEN:-$GITHUB_TOKEN}
 
 readonly LATEST_RELEASE_TAG="@ionos-wordpress/latest"
 
+# do explicitly ONLY when running locally (=> not in CI)
+if [[ "${CI}" == '' ]]; then
+  # echo "${GH_TOKEN}" | pnpm gh auth login --with-token
+  # in case the repo is forked we need to explicitly set the default repo
+  pnpm gh repo set-default $(git remote get-url origin | sed -E 's/.*[:\/]([^\/]+\/[^\/]+)\.git/\1/')
+fi
+
 # get pre-release flagged release
 PRE_RELEASE=$(gh release list --json name,isPrerelease | jq -r '.[] | select(.isPrerelease == true) | .name')
 if [[ $(echo "$PRE_RELEASE" | wc -l) -ne 1 ]]; then
@@ -54,7 +61,7 @@ if [[ "$LATEST_RELEASE" != "$LATEST_RELEASE_TAG" ]]; then
   git push origin --delete "$LATEST_RELEASE_TAG" 2>/dev/null ||:
 
   # create release
-  gh release create "$LATEST_RELEASE_TAG" --notes '' --title="$LATEST_RELEASE_TAG" --draft=false --prerelease=false --latest=true
+  gh release create "$LATEST_RELEASE_TAG" --notes '' --title="$LATEST_RELEASE_TAG"
   # 2>/dev/null
   echo "created release '$LATEST_RELEASE_TAG'"
 fi
@@ -69,7 +76,9 @@ gh release edit "$LATEST_RELEASE_TAG" \
   --target $PRE_RELEASE_COMMIT_HASH \
   --notes "latest release is release [$PRE_RELEASE]($PRE_RELEASE_URL)" \
   --tag $LATEST_RELEASE_TAG \
-  --latest \
+  --latest=true \
+  --draft=false \
+  --prerelease=false \
   1>/dev/null
 
 # update latest release assets
