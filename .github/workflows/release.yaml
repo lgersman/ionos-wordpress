@@ -3,7 +3,7 @@
 #
 # see ./scripts/release.sh for details
 #
-name: 'release'
+name: 'release (manual workflow)'
 
 on:
   # this workflow needs to be triggered manually
