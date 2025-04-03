@@ -8,12 +8,12 @@ name: 'release'
 on:
   # this workflow needs to be triggered manually
   workflow_dispatch:
-    branches:
-      - main
 
 jobs:
   update-latest:
     runs-on: ubuntu-latest
+    # only run on main branch
+    if: github.event.branch == 'main'
     # ensure only one pipeline is running this workflow at a time
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
