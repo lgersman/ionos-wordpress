@@ -50,7 +50,7 @@ else
   PRE_RELEASE=$(echo "$PRE_RELEASE" | head -n 1)
   ionos.wordpress.log_header "Releasing $PRE_RELEASE"
 fi
-
+set -x
 # get or create the release titled 'latest'
 readonly LATEST_RELEASE=$(gh release list --json tagName,isLatest | jq -r '.[] | select(.isLatest == true) | .tagName')
 if [[ "$LATEST_RELEASE" != "$LATEST_RELEASE_TAG" ]]; then
@@ -60,10 +60,9 @@ if [[ "$LATEST_RELEASE" != "$LATEST_RELEASE_TAG" ]]; then
   git tag -d "$LATEST_RELEASE_TAG" 2>/dev/null ||:
   git push origin --delete "$LATEST_RELEASE_TAG" 2>/dev/null ||:
 
-  # # create release
-  # gh release create "$LATEST_RELEASE_TAG" --notes '' --title="$LATEST_RELEASE_TAG"
-  # # 2>/dev/null
-  # echo "created release '$LATEST_RELEASE_TAG'"
+  # create release
+  gh release create "$LATEST_RELEASE_TAG" --notes '' --title="$LATEST_RELEASE_TAG" --latest=true --draft=false --prerelease=false 2>/dev/null
+  echo "created release '$LATEST_RELEASE_TAG'"
 fi
 
 # Get the commit hash of the tag associated with the pre-release
@@ -95,6 +94,11 @@ for ASSET in $ASSETS; do
   fi
   rm -f $TARGET_ASSET_FILENAME
 done
+
+# Remove the 'pre-release' flag from the PRE_RELEASE
+gh release edit "$PRE_RELEASE" --prerelease=false --draft=false --latest=false 1>/dev/null
+
+ionos.wordpress.log_info "Removed 'pre-release' flag from release '$PRE_RELEASE'"
 
 readonly success_message="Successfully updated release '$LATEST_RELEASE_TAG' to point to release ${LATEST_RELEASE_TAG}(commit $PRE_RELEASE_COMMIT_HASH)"
 # @TODO: success message can be markdown containing links
