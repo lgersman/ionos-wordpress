@@ -125,7 +125,7 @@ fi
 
 # workaround : delete all existing prereleases (multiple releases can have the prerelease tag through canceled/broken releases)
 # this is for the case that existing releases are marked as prerelease - we want to ensure that only one release has the prerelease tag
-gh release list --json name,isPrerelease | jq -r '.[].name' | xargs -I {} gh release delete --yes {}
+gh release list --json name,isPrerelease | jq -r '.[] | select(.isPrerelease == true) | .name' | xargs -I {} gh release delete --yes {}
 
 # loop over all package.json files changed by changeset version command
 for PACKAGE_JSON in $(git --no-pager diff --name-only HEAD HEAD~1 | grep 'package.json'); do
