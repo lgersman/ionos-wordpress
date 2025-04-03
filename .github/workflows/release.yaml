@@ -1,0 +1,75 @@
+#
+# this workflow will move the release flagged as 'pre-release' to the release named 'latest'
+# the workflow in detail:
+# - check if a release with flag "pre-release" exists
+# - check if a 'latest' release exists
+#   - if not, create a 'latest' release
+# - take over commit hash, and assets from the 'pre-release' to the 'latest' release
+#   - semantic versions in assets will be renamed to 'latest'
+#       (example: ionos-essentials-0.1.1-php7.4.zip => ionos-essentials-latest-php7.4.zip)
+#   - release note will be set to the 'pre-release' release url and title to make it easier to find the origin release
+# - remove the 'pre-release' flag from the release used to populate the 'latest' release
+#
+# afterwards the 'latest' release will contain the same assets as the 'pre-release' release
+# except that semantic version numbers in asstes filenames are replaced with 'latest'
+#
+name: 'release'
+
+on:
+  # can be called from other workflows
+  workflow_dispatch:
+
+jobs:
+  latest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update latest release
+        run: |
+          PRE_RELEASE=$(gh release view --json id --jq '.id' --repo ${GITHUB_REPOSITORY} --state drafts,published --yes | grep -oP '(?<=id": )\d+')
+          if [ -z "$PRE_RELEASE" ]; then
+            if [ "$CI" = true ]; then
+              echo "::error file=release.yml,line=1,col=1:: No pre-release found"
+            else
+              echo "No pre-release found"
+            fi
+            exit 1
+          fi
+
+          LATEST_RELEASE=$(gh release view --json id --jq '.id' --repo ${GITHUB_REPOSITORY} --name latest --yes | grep -oP '(?<=id": )\d+')
+          if [ -z "$LATEST_RELEASE" ]; then
+            gh release create latest --repo ${GITHUB_REPOSITORY} --generate-notes --yes
+            LATEST_RELEASE=$(gh release view --json id --jq '.id' --repo ${GITHUB_REPOSITORY} --name latest --yes | grep -oP '(?<=id": )\d+')
+          fi
+
+          TAG_NAME=$(gh release view $PRE_RELEASE --repo ${GITHUB_REPOSITORY} --json tagName --jq '.tagName')
+          gh release edit $LATEST_RELEASE --repo ${GITHUB_REPOSITORY} --title latest --notes "" --tag $TAG_NAME --yes
+
+          ASSETS=$(gh release view $PRE_RELEASE --repo ${GITHUB_REPOSITORY} --json assets --jq '.assets[] | .name')
+          for ASSET in $ASSETS; do
+            LATEST_ASSET=$(echo $ASSET | sed -E 's/[0-9]+\.[0-9]+\.[0-9]+/latest/g')
+            gh release download $PRE_RELEASE --repo ${GITHUB_REPOSITORY} --pattern $ASSET -o $ASSET
+            if ! gh release upload $LATEST_RELEASE --repo ${GITHUB_REPOSITORY} --clobber $LATEST_ASSET; then
+              if [ "$CI" = true ]; then
+                echo "::error file=release.yml,line=1,col=1:: Failed to upload asset $LATEST_ASSET"
+              else
+                echo "Failed to upload asset $LATEST_ASSET"
+              fi
+              exit 1
+            fi
+            rm $ASSET
+          done
+
+          if ! gh release edit $PRE_RELEASE --repo ${GITHUB_REPOSITORY} --prerelease false --yes; then
+            if [ "$CI" = true ]; then
+              echo "::error file=release.yml,line=1,col=1:: Failed to update pre-release"
+            else
+              echo "Failed to update pre-release"
+            fi
+            exit 1
+          fi
+
+          if [ "$CI" = true ]; then
+            echo "::summary:: Successfully updated latest release"
+          else
+            echo "Successfully updated latest release"
+          fi
