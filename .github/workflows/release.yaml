@@ -16,6 +16,31 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
+      - name: Dump GitHub context
+        env:
+          CONTEXT: ${{ toJson(github) }}
+          JOB_CONTEXT: ${{ toJson(job) }}
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: |
+          cat << EOF
+          ####### 'github' #######
+          $CONTEXT
+          ####### 'job' #######
+          $JOB_CONTEXT"
+          ###### 'steps' #######
+          $STEPS_CONTEXT
+          ###### 'runner' #######
+          $RUNNER_CONTEXT
+          ###### 'strategy' #######
+          $STRATEGY_CONTEXT
+          ###### 'matrix' #######
+          $MATRIX_CONTEXT
+          ###### environment #######
+          $(env | grep GITHUB)
+          EOF
       # only run on main branch
       - name: Check branch
         if: github.event.branch != 'main'
