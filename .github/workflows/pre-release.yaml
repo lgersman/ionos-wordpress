@@ -17,11 +17,8 @@ name: 'pre-release'
 # execute this workflow only on the main branch and wait until the integration workflow is completed
 on:
   push:
-    # @REMOVE: before PR
-    branches-ignore:
-      - '**'
-    # branches:
-    #   - main
+    branches:
+      - main
 
 permissions:
   # write-all is too much, but we need to write to packages
