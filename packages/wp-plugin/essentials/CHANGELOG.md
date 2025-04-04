@@ -1,5 +1,11 @@
 # @ionos-wordpress/essentials
 
+## 0.1.10
+
+### Patch Changes
+
+- c226d86: test-release-20
+
 ## 0.1.9
 
 ### Patch Changes
