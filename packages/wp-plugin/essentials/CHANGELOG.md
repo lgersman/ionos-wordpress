@@ -1,5 +1,11 @@
 # @ionos-wordpress/essentials
 
+## 0.1.11
+
+### Patch Changes
+
+- 861504b: test-release-22
+
 ## 0.1.10
 
 ### Patch Changes
