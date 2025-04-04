@@ -16,7 +16,9 @@ on:
   push:
     # run for all branches except main (because testing is also done in pre-release workflow)
     branches-ignore:
-      - 'main'
+      # @REMOVE: before PR
+      - '**'
+      # - 'main'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
