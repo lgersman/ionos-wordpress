@@ -62,12 +62,9 @@ if [[ "$LATEST_RELEASE" != "$LATEST_RELEASE_TAG" ]]; then
 
   # create release
   gh release create "$LATEST_RELEASE_TAG" \
-    --target HEAD \
     --notes '' \
-    --title="$LATEST_RELEASE_TAG" \
+    --title "$LATEST_RELEASE_TAG" \
     --latest=true \
-    --draft=false \
-    --prerelease=false \
     2>/dev/null
 
   echo "created release '$LATEST_RELEASE_TAG'"
