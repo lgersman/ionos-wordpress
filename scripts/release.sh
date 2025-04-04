@@ -105,7 +105,7 @@ gh release edit "$PRE_RELEASE" --prerelease=false --draft=false --latest=false 1
 
 ionos.wordpress.log_info "Removed 'pre-release' flag from release '$PRE_RELEASE'"
 
-readonly success_message="Successfully updated release '$LATEST_RELEASE_TAG' to point to release ${PRE_RELEASE}($PRE_RELEASE_URL)"
+readonly success_message="Successfully updated release '$LATEST_RELEASE_TAG' (https://github.com/lgersman/ionos-wordpress/releases/tag/%40ionos-wordpress%2Flatest) to point to release '${PRE_RELEASE}' ($PRE_RELEASE_URL)"
 # @TODO: success message can be markdown containing links
 [[ "${CI:-}" == "true" ]] && echo "$success_message" >> $GITHUB_STEP_SUMMARY
 echo "$success_message"
