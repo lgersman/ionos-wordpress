@@ -50,7 +50,7 @@ else
   PRE_RELEASE=$(echo "$PRE_RELEASE" | head -n 1)
   ionos.wordpress.log_header "Releasing $PRE_RELEASE"
 fi
-set -x
+
 # get or create the release titled 'latest'
 readonly LATEST_RELEASE=$(gh release list --json tagName,isLatest | jq -r '.[] | select(.isLatest == true) | .tagName')
 if [[ "$LATEST_RELEASE" != "$LATEST_RELEASE_TAG" ]]; then
