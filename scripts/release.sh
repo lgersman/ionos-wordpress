@@ -114,7 +114,7 @@ for ASSET in $ASSETS; do
     # CHANGELOG is the release note of the pre-release (aka the changelog markdown of the release)
     CHANGELOG="$(gh release view $PRE_RELEASE --json body --jq '.body')"
 
-    INFO_JSON_FILENAME="${PLUGIN}-latest.json"
+    INFO_JSON_FILENAME="${PLUGIN}-info.json"
 
     jq -n \
       --arg version "$VERSION" \
