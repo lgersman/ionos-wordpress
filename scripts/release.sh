@@ -109,8 +109,8 @@ for ASSET in $ASSETS; do
     PLUGIN=$(echo $ASSET | sed -E 's/^(.*)-[0-9]+\.[0-9]+\.[0-9]+.*/\1/')
     # example : ionos-essentials/ionos-essentials.php
     SLUG="${PLUGIN}/${PLUGIN}.php"
-    # example: https://github.com/lgersman/ionos-wordpress/releases/download/%40ionos-wordpress%2Flatest/ionos-essentials-latest-php7.4.zip
-    PACKAGE="https://github.com/$GITHUB_OWNER_REPO/releases/download/$(printf $LATEST_RELEASE_TAG | jq -Rrs '@uri')/$TARGET_ASSET_FILENAME"
+    # example: https://github.com/lgersman/ionos-wordpress/releases/download/%40ionos-wordpress%2Fessentials%400.1.3/ionos-essentials-0.1.3-php7.4.zip
+    PACKAGE="https://github.com/$GITHUB_OWNER_REPO/releases/download/$(printf $PRE_RELEASE | jq -Rrs '@uri')/$ASSET"
     # CHANGELOG is the release note of the pre-release (aka the changelog markdown of the release)
     CHANGELOG="$(gh release view $PRE_RELEASE --json body --jq '.body')"
 
