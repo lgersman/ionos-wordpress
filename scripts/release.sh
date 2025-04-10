@@ -115,11 +115,7 @@ for ASSET in $ASSETS; do
     CHANGELOG="$(gh release view $PRE_RELEASE --json body --jq '.body')"
 
     # Convert markdown in CHANGELOG to HTML using a Node.js package
-    CHANGELOG_HTML=$(node -e "
-      const marked = require('marked');
-      const changelog = process.argv[1];
-      console.log(marked.parse(changelog));
-    " "$CHANGELOG")
+    CHANGELOG_HTML=$(echo "$CHANGELOG" | npx marked)
 
     INFO_JSON_FILENAME="${PLUGIN}-info.json"
 
