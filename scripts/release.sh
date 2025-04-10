@@ -114,14 +114,21 @@ for ASSET in $ASSETS; do
     # CHANGELOG is the release note of the pre-release (aka the changelog markdown of the release)
     CHANGELOG="$(gh release view $PRE_RELEASE --json body --jq '.body')"
 
+    # Convert markdown in CHANGELOG to HTML using a Node.js package
+    CHANGELOG_HTML=$(node -e "
+      const marked = require('marked');
+      const changelog = process.argv[1];
+      console.log(marked.parse(changelog));
+    " "$CHANGELOG")
+
     INFO_JSON_FILENAME="${PLUGIN}-info.json"
 
     jq -n \
       --arg version "$VERSION" \
       --arg slug "$SLUG" \
       --arg package "$PACKAGE" \
-      --arg changelog "$CHANGELOG" \
-      '{version: $version, slug: $slug, package: $package, changelog: $changelog}' > "$INFO_JSON_FILENAME"
+      --arg changelog "$CHANGELOG_HTML" \
+      '{version: $version, slug: $slug, package: $package, sections : { changelog: $changelog }}' > "$INFO_JSON_FILENAME"
 
     if ! gh release upload $LATEST_RELEASE_TAG $INFO_JSON_FILENAME --clobber; then
       $error_message="Failed to upload asset $INFO_JSON_FILENAME"
