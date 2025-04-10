@@ -98,6 +98,38 @@ for ASSET in $ASSETS; do
     echo "Error: $error_message"
   fi
   rm -f $TARGET_ASSET_FILENAME
+
+  #
+  # create/update <plugin>-latest.json file (example : ionos-essentials.info.json)
+  #
+  {
+    # example: 1.2.3
+    VERSION=$(echo $ASSET | sed -E 's/.*-([0-9]+\.[0-9]+\.[0-9]+)-.*/\1/')
+    # example: ionos-essentials
+    PLUGIN=$(echo $ASSET | sed -E 's/^(.*)-[0-9]+\.[0-9]+\.[0-9]+.*/\1/')
+    # example : ionos-essentials/ionos-essentials.php
+    SLUG="${PLUGIN}/${PLUGIN}.php"
+    # example: https://github.com/lgersman/ionos-wordpress/releases/download/%40ionos-wordpress%2Flatest/ionos-essentials-latest-php7.4.zip
+    PACKAGE="https://github.com/$GITHUB_OWNER_REPO/releases/download/$(printf $LATEST_RELEASE_TAG | jq -Rrs '@uri')/$TARGET_ASSET_FILENAME"
+    # CHANGELOG is the release note of the pre-release (aka the changelog markdown of the release)
+    CHANGELOG="$(gh release view @ionos-wordpress/$PRE_RELEASE --json body --jq '.body')"
+
+    INFO_JSON_FILENAME="${PLUGIN}-latest.json"
+
+    jq -n \
+      --arg version "$VERSION" \
+      --arg slug "$SLUG" \
+      --arg package "$PACKAGE" \
+      --arg changelog "$CHANGELOG" \
+      '{version: $version, slug: $slug, package: $package, changelog: $changelog}' > "$INFO_JSON_FILENAME"
+
+    if ! gh release upload $LATEST_RELEASE_TAG $INFO_JSON_FILENAME --clobber; then
+      $error_message="Failed to upload asset $INFO_JSON_FILENAME"
+      [[ "${CI:-}" == "true" ]] && echo "::error:: $error_message"
+      echo "Error: $error_message"
+    fi
+    rm -f $INFO_JSON_FILENAME
+  }
 done
 
 # Remove the 'pre-release' flag from the PRE_RELEASE
