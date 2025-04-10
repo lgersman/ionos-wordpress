@@ -112,7 +112,7 @@ for ASSET in $ASSETS; do
     # example: https://github.com/lgersman/ionos-wordpress/releases/download/%40ionos-wordpress%2Flatest/ionos-essentials-latest-php7.4.zip
     PACKAGE="https://github.com/$GITHUB_OWNER_REPO/releases/download/$(printf $LATEST_RELEASE_TAG | jq -Rrs '@uri')/$TARGET_ASSET_FILENAME"
     # CHANGELOG is the release note of the pre-release (aka the changelog markdown of the release)
-    CHANGELOG="$(gh release view @ionos-wordpress/$PRE_RELEASE --json body --jq '.body')"
+    CHANGELOG="$(gh release view $PRE_RELEASE --json body --jq '.body')"
 
     INFO_JSON_FILENAME="${PLUGIN}-latest.json"
 
