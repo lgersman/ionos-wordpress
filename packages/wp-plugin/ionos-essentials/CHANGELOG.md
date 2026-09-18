@@ -1,5 +1,12 @@
 # @ionos-wordpress/essentials
 
+## 1.7.1
+
+### Patch Changes
+
+- ca32297: fix PHP notices on the onboarding admin page: dequeue (not deregister) the `buttons` style to avoid a `_doing_it_wrong` notice, and explicitly set the `$title` global to avoid a `strip_tags(null)` deprecation notice
+- 6b6ae88: resolve plugin updates from S3 with GitHub fallback
+
 ## 1.7.0
 
 ### Minor Changes
