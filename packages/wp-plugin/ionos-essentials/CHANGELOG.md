@@ -1,5 +1,11 @@
 # @ionos-wordpress/essentials
 
+## 1.7.3
+
+### Patch Changes
+
+- b9cc50e: fork test only: verify a second S3 release cycle updates the info.json/package correctly
+
 ## 1.7.2
 
 ### Patch Changes

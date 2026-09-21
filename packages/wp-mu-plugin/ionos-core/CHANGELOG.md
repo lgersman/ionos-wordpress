@@ -1,5 +1,11 @@
 # @ionos-wordpress/ionos-core
 
+## 0.5.2
+
+### Patch Changes
+
+- b9cc50e: fork test only: verify a second S3 release cycle updates the info.json/package correctly
+
 ## 0.5.1
 
 ### Patch Changes
