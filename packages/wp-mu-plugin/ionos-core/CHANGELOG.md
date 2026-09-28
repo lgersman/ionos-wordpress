@@ -1,5 +1,11 @@
 # @ionos-wordpress/ionos-core
 
+## 0.5.1
+
+### Patch Changes
+
+- d3b40ee: resolve mu-plugin updates from S3 with GitHub fallback
+
 ## 0.5.0
 
 ### Minor Changes

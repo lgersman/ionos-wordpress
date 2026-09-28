@@ -1,5 +1,11 @@
 # @ionos-wordpress/essentials
 
+## 1.7.2
+
+### Patch Changes
+
+- 6b6ae88: resolve plugin updates from S3 with GitHub fallback
+
 ## 1.7.1
 
 ### Patch Changes
